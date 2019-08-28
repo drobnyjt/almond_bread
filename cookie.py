@@ -1,21 +1,22 @@
 import numpy as np
+import pickle
 from PIL import Image,ImageDraw,ImageOps
 
-max_iter = 100
+max_iter = 1000
 
-def f(c, n):
+def f(c, d):
     x = 0
     for i in range(max_iter):
-        x = x**1.75 + c
+        x = x**d + c
         if (abs(x) > 2.0):
             break
     return i
 
-width = 600*4
-height = 600*4
-x0 = 1.0
-y0 = 0.5j
-zoom = 0.6
+width = 1200
+height = 1200
+x0 = 1.5
+y0 = 1.0j
+zoom = 0.5
 dx = 1./zoom
 dy = 1./zoom
 sx = dx/width
@@ -36,10 +37,12 @@ num = 5
 color = np.zeros(shape=(width,height),dtype='complex64')
 
 for i in range(width):
+    print(f'row: {i}')
     for k in range(height):
         c = sx*i - x0 + sy*k*1j - y0
-        color[i,k] = f(c,5)
+        color[i,k] = f(c, 2)
 
+color = np.log(color)
 color /= np.max(color)
 color = np.conj(color)*color
 #im = Image.new('RGB', (width, height), (0, 0, 0))
